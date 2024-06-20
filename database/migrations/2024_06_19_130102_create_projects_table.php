@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title')->unique();
             $table->string('content');
             $table->string('last_commit')->nullable();
-            $table->string('slug')->unique()->default('');
+            $table->string('slug')->unique();
             $table->timestamps();
         });
     }
