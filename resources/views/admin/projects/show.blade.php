@@ -1,9 +1,12 @@
 @extends('layouts.admin')
 
 @section('content')
-    <h1>sono la pagina show</h1>
-    <p>Title: {{ $project->title }}</p>
-    <p>Content: {{ $project->content }}</p>
-    <p>Last commit: {{ $project->last_commit }}</p>
-    <a class="btn btn-primary" href="{{ route('admin.projects.index') }}">Back</a>
-    @endsection
+    <h1>Detail page</h1>
+    @include('partials.message-success')
+    <div class="mt-4">
+        <p><span class="fw-bold">Title:</span> {{ $project->title }}</p>
+        <p><span class="fw-bold">Content:</span> {{ $project->content }}</p>
+        <p><span class="fw-bold">Last commit:</span> {{ $project->last_commit }}</p>
+        <a class="btn btn-primary" href="{{ route('admin.projects.index') }}">Back</a>
+    </div>
+@endsection

@@ -2,13 +2,9 @@
 
 @section('content')
     <h1>My Projects:</h1>
-    
-    @if (session('message'))
-    <div class="alert alert-success">
-        {{ session('message') }}
-    </div>
-    @endif
-    
+
+    @include('partials.message-success')
+
     <table class="table">
         <thead>
             <tr>
@@ -37,7 +33,8 @@
                         <form action="{{ route('admin.projects.destroy', ['project' => $project->slug]) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger" method="POST"><i class="fa-solid fa-trash"></i></button>
+                            <button type="submit" class="btn btn-danger" method="POST"><i
+                                    class="fa-solid fa-trash"></i></button>
                         </form>
 
                         {{-- EDIT CRUD --}}

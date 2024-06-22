@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -32,12 +33,12 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        $data = $request->all();
+        $data = $request->validated();
         $project = new Project();
         $project->fill($data);
         $project->slug = Str::slug($project->title);
         $project->save();
-        return redirect()->route('admin.projects.index');
+        return redirect()->route('admin.projects.show', ['project'=>$project->slug]);
     }
 
     /**
@@ -60,13 +61,12 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Project $project)
+    public function update(UpdateProjectRequest $request, Project $project)
     {
-        $data = $request->all();
+        $data = $request->validated();
         $project->slug = Str::slug($project->title);
         $project->update($data);
-        return redirect()->route('admin.projects.show', ['project'=>$project->slug]);
-
+        return redirect()->route('admin.projects.show', ['project'=>$project->slug])->with('message', 'project '. $project->title . ' has been created');
     }
 
     /**
@@ -75,6 +75,6 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $project->delete();
-        return redirect()->route('admin.projects.index')->with('message', 'project'. $project->title . ' has been deleted');
+        return redirect()->route('admin.projects.index')->with('message', 'project '. $project->title . ' has been deleted');
     }
 }
