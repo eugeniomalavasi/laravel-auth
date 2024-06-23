@@ -7,6 +7,7 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
@@ -34,11 +35,17 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request)
     {
         $data = $request->validated();
+
+        if ($request->hasFile('cover_img')) {
+            $image_path = Storage::put('project_images', $request->cover_img);
+            $data['cover_img'] = $image_path;
+        }
+
         $project = new Project();
         $project->fill($data);
-        $project->slug = Str::slug($project->title);
+        $project->slug = Str::slug($request->title);
         $project->save();
-        return redirect()->route('admin.projects.show', ['project'=>$project->slug]);
+        return redirect()->route('admin.projects.show', compact('project'));
     }
 
     /**
@@ -65,8 +72,15 @@ class ProjectController extends Controller
     {
         $data = $request->validated();
         $project->slug = Str::slug($project->title);
+        if ($request->hasFile('cover_img')) {
+            if ($project->cover_img) {
+                Storage::delete($project->cover_img);
+            }
+            $image_path = Storage::put('project_images', $request->cover_img);
+            $data['cover_img'] = $image_path;
+        }
         $project->update($data);
-        return redirect()->route('admin.projects.show', ['project'=>$project->slug])->with('message', 'project '. $project->title . ' has been created');
+        return redirect()->route('admin.projects.show', ['project' => $project->slug])->with('message', 'project ' . $project->title . ' has been created');
     }
 
     /**
@@ -74,7 +88,10 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        if ($project->cover_img) {
+            Storage::delete($project->cover_img);
+        }
         $project->delete();
-        return redirect()->route('admin.projects.index')->with('message', 'project '. $project->title . ' has been deleted');
+        return redirect()->route('admin.projects.index')->with('message', 'project ' . $project->title . ' has been deleted');
     }
 }

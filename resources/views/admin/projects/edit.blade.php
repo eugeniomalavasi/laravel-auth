@@ -7,14 +7,15 @@
 
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" value="{{ $project->title }}">
+            <input type="text" class="form-control" id="title" name="title" value="{{ old('title',$project->title) }}">
         </div>
         <div class="mb-3">
             <label for="content" class="form-label">Content</label>
-            <textarea class="form-control" id="content" rows="3" name="content">{{ $project->content }}</textarea>
+            <textarea class="form-control" id="content" rows="3" name="content">{{ old('content',$project->content) }}</textarea>
         </div>
 
-        <button class="btn btn-success" type="submit">Salva</button>
+        <img class="w-25" src="{{ asset('storage/' . $project->cover_img) }}" alt="">
+        <div class="mt-4 mb-4"><button class="btn btn-success" type="submit">Salva</button></div>
     </form>
 @endsection
 
